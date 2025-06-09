@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4><i class="bi bi-pencil-square"></i> Edit Your Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- School Information -->
+                        <div class="mb-3">
+                            <label class="form-label">School</label>
+                            {{ form.school }}
+                            {% if form.school.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.school.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Grade Level -->
+                        <div class="mb-3">
+                            <label class="form-label">Grade Level</label>
+                            {{ form.grade_level }}
+                        </div>
+                        
+                        <!-- Personal Information -->
+                        <div class="mb-3">
+                            <label class="form-label">Town</label>
+                            {{ form.town }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Birthdate</label>
+                            {{ form.birthdate }}
+                            {% if form.birthdate.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.birthdate.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Parent Contact Info</label>
+                            {{ form.parent_contact }}
+                            <div class="form-text">Optional - for emergency contact</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load extras %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">📅 Task Calendar - {{ month_name }} {{ year }}</h2>
+    
+    <!-- Month Navigation -->
+    <div class="d-flex justify-content-between mb-4">
+        <a href="{% url 'tasks:task_calendar' %}?year={{ prev_month_year }}&month={{ prev_month_month }}" 
+           class="btn btn-outline-secondary">
+            ← Previous Month
+        </a>
+        <a href="{% url 'tasks:task_calendar' %}?year={{ next_month_year }}&month={{ next_month_month }}" 
+           class="btn btn-outline-secondary">
+            Next Month →
+        </a>
+    </div>
+
+    <!-- Big Calendar -->
+    <div class="calendar-container">
+        <table class="table table-bordered calendar-table">
+            <thead>
+                <tr class="text-center">
+                    <th scope="col" style="width: 14.28%">Sunday</th>
+                    <th scope="col" style="width: 14.28%">Monday</th>
+                    <th scope="col" style="width: 14.28%">Tuesday</th>
+                    <th scope="col" style="width: 14.28%">Wednesday</th>
+                    <th scope="col" style="width: 14.28%">Thursday</th>
+                    <th scope="col" style="width: 14.28%">Friday</th>
+                    <th scope="col" style="width: 14.28%">Saturday</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week in weeks %}
+                <tr>
+                    {% for day in week %}
+                    <td class="calendar-day {% if day == 0 %}calendar-day-empty{% endif %}" 
+                        style="height: 150px; vertical-align: top;">
+                        {% if day != 0 %}
+                            <div class="day-number">{{ day }}</div>
+                            <div class="day-tasks">
+                                {% if day in tasks_by_day %}
+                                    {% for task in tasks_by_day|get_item:day %}
+                                    <div class="task-item {% if task.completed %}completed{% endif %} 
+                                                  {% if task.is_overdue %}overdue{% endif %}">
+                                        {{ task.title }}
+                                        <small class="text-muted d-block">
+                                            {{ task.due_date|time }}
+                                        </small>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .calendar-table {
+        table-layout: fixed;
+    }
+    .calendar-day {
+        position: relative;
+    }
+    .calendar-day-empty {
+        background-color: #f8f9fa;
+    }
+    .day-number {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .day-tasks {
+        max-height: 120px;
+        overflow-y: auto;
+    }
+    .task-item {
+        background-color: #e9f7fe;
+        border-left: 3px solid #17a2b8;
+        padding: 3px;
+        margin-bottom: 3px;
+        font-size: 0.85rem;
+        border-radius: 3px;
+    }
+    .task-item.completed {
+        background-color: #e8f5e9;
+        border-left-color: #28a745;
+        opacity: 0.7;
+    }
+    .task-item.overdue {
+        background-color: #fde8e8;
+        border-left-color: #dc3545;
+    }
+</style>
+{% endblock %}

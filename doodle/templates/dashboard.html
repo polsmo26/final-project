@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Student Profile Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-primary shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4>Student Profile</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="avatar-lg mx-auto bg-primary-subtle rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-person-fill text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                    </div>
+                    <h5 class="card-title">
+                        {% if user.get_full_name %}
+                            {{ user.get_full_name }}
+                        {% else %}
+                            {{ user.username }}
+                        {% endif %}
+                    </h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="bi bi-envelope me-2 text-primary"></i>
+                            {{ user.email|default:"Not provided" }}
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-building me-2 text-primary"></i>
+                            {{ user.studentprofile.school|default:"Not specified" }}
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-mortarboard me-2 text-primary"></i>
+                            Grade {{ user.studentprofile.grade_level|default:"Not specified" }}
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-calendar-event me-2 text-primary"></i>
+                            {% if user.studentprofile.birthdate %}
+                                Birthday: {{ user.studentprofile.birthdate|date:"F j" }}
+                            {% else %}
+                                Birthday: Not specified
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+                    <div class="card-footer bg-transparent border-top">
+                        <div class="d-flex justify-content-end">
+                            <a href="{% url 'edit_profile' %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Edit Profile
+                            </a>
+                        </div>
+                    </div>                
+            </div>
+        </div>
+
+        <!-- Task Statistics -->
+        <div class="col-md-8">
+            <div class="card border-success shadow mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4>Task Overview</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 border rounded bg-light">
+                                <h2 class="text-primary">{{ total_tasks|default:"0" }}</h2>
+                                <p class="mb-0">Total Tasks</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 border rounded bg-light">
+                                <h2 class="text-success">{{ completed_tasks|default:"0" }}</h2>
+                                <p class="mb-0">Completed</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 border rounded bg-light">
+                                <h2 class="text-warning">{{ pending_tasks|default:"0" }}</h2>
+                                <p class="mb-0">Pending</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Difficulty Breakdown -->
+            <div class="card border-info shadow">
+                <div class="card-header bg-info text-white">
+                    <h4>Task Difficulty</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 border rounded bg-light">
+                                <h2 class="text-success">{{ difficulty_stats.easy|default:"0" }}</h2>
+                                <p class="mb-0">Easy Tasks</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 border rounded bg-light">
+                                <h2 class="text-warning">{{ difficulty_stats.medium|default:"0" }}</h2>
+                                <p class="mb-0">Medium Tasks</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 border rounded bg-light">
+                                <h2 class="text-danger">{{ difficulty_stats.hard|default:"0" }}</h2>
+                                <p class="mb-0">Hard Tasks</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

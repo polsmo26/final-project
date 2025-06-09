@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Your Tasks</h2>
+    <a href="{% url 'tasks:task_create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Add Task
+    </a>
+  </div>
+
+  <!-- Filter/Sort Controls -->
+  <form method="GET" class="mb-4">  <!-- Changed to GET form -->
+    <div class="row g-3 align-items-center">
+      <!-- Status Filter -->
+      <div class="col-md-3">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select" onchange="this.form.submit()">
+          <option value="">All Tasks</option>
+          <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Completed</option>
+          <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Pending</option>
+        </select>
+      </div>
+      
+      <!-- Difficulty Filter -->
+      <div class="col-md-3">
+        <label class="form-label">Difficulty</label>
+        <select name="difficulty" class="form-select" onchange="this.form.submit()">
+          <option value="">All Levels</option>
+          <option value="E" {% if request.GET.difficulty == 'E' %}selected{% endif %}>Easy</option>
+          <option value="M" {% if request.GET.difficulty == 'M' %}selected{% endif %}>Medium</option>
+          <option value="H" {% if request.GET.difficulty == 'H' %}selected{% endif %}>Hard</option>
+        </select>
+      </div>
+      
+      <!-- Sort Options -->
+      <div class="col-md-3">
+        <label class="form-label">Sort By</label>
+        <select name="sort" class="form-select" onchange="this.form.submit()">
+          <option value="title" {% if request.GET.sort == 'title' %}selected{% endif %}>Title (A-Z)</option>
+          <option value="-title" {% if request.GET.sort == '-title' %}selected{% endif %}>Title (Z-A)</option>
+          <option value="difficulty" {% if request.GET.sort == 'difficulty' %}selected{% endif %}>Difficulty (Easy First)</option>
+          <option value="-difficulty" {% if request.GET.sort == '-difficulty' %}selected{% endif %}>Difficulty (Hard First)</option>
+          <option value="due_date" {% if request.GET.sort == 'due_date' %}selected{% endif %}>Due Date (Soonest)</option>
+          <option value="-due_date" {% if request.GET.sort == '-due_date' %}selected{% endif %}>Due Date (Latest)</option>
+        </select>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="col-md-3 d-flex align-items-end">
+        <a href="{% url 'tasks:task_list' %}" class="btn btn-outline-secondary w-100">
+          <i class="bi bi-arrow-counterclockwise"></i> Reset Filters
+        </a>
+      </div>
+    </div>
+  </form>
+
+  <!-- Task List -->
+  <div class="card border-0 shadow">
+    <ul class="list-group list-group-flush">
+      {% for task in tasks %}
+      <li class="list-group-item py-3">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="me-3">
+            <h5 class="mb-1 d-flex align-items-center">
+              {{ task.title }}
+              <span class="badge ms-2 {% if task.difficulty == 'E' %}bg-success{% elif task.difficulty == 'M' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+                {{ task.get_difficulty_display }}
+              </span>
+            </h5>
+            {% if task.description %}
+            <p class="text-muted mb-0">{{ task.description }}</p>
+            {% endif %}
+            {% if task.due_date %}
+            <div class="mt-2">
+              <span class="badge {% if task.is_overdue %}bg-danger{% else %}bg-info{% endif %}">
+                <i class="bi bi-calendar-check"></i> 
+                Due: {{ task.due_date|date:"M d, Y" }}
+                {% if task.is_overdue %} (Overdue){% endif %}
+              </span>
+            </div>
+            {% endif %}
+          </div>
+          <div class="d-flex gap-3"> 
+          <div class="d-flex align-items-center">
+            <div class="btn-group btn-group-sm me-2">
+              <a href="{% url 'tasks:task_edit' task.id %}" class="btn btn-primary px-3">
+                <i class="bi bi-pencil"></i>  Edit  
+              </a>
+              
+              <form method="post" action="{% url 'tasks:task_delete' task.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger px-3">
+                  <i class="bi bi-trash"></i>  Delete  
+                </button>
+              </form>
+            </div>
+            <form method="POST" action="{% url 'tasks:toggle_complete' task.id %}" class="me-2">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm {% if task.completed %}btn-success{% else %}btn-outline-secondary{% endif %} px-3">
+                {% if task.completed %}
+                  <i class="bi bi-check-circle-fill"></i> Completed
+                {% else %}
+                  <i class="bi bi-circle"></i> Mark Complete
+                {% endif %}
+              </button>
+            </form>
+          </div>
+          </div>
+        </div>
+      </li>
+      {% empty %}
+      <li class="list-group-item py-4 text-center text-muted">
+        <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+        <p class="mt-2 mb-0">No tasks found. Create your first task!</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
+

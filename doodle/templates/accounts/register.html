@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">Student Registration</h3>
+        </div>
+        <div class="card-body">
+          <form method="POST">
+            {% csrf_token %}
+            
+            <!-- Personal Information Section -->
+            <div class="mb-4">
+              <h5 class="text-muted mb-3">Personal Information</h5>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">First Name</label>
+                  {{ form.first_name }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Last Name</label>
+                  {{ form.last_name }}
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Email</label>
+                  {{ form.email }}
+                </div><div class="col-12">
+                    <label class="form-label">Birthdate</label>
+                    {{ form.birthdate }}
+                  </div>
+                <div class="col-12">
+                  <label class="form-label">Town</label>
+                  {{ form.town }}
+                </div>
+              </div>
+            </div>
+            
+            <!-- School Information Section -->
+            <div class="mb-4">
+                <hr>
+              <h5 class="text-muted mb-3">School Information</h5>
+              <div class="row g-3">
+                <div class="col-md-8">
+                  <label class="form-label">School Name</label>
+                  {{ form.school }}
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Grade Level</label>
+                  {{ form.grade_level }}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Account Information Section -->
+            <hr>
+            <div class="mb-4">
+              <h5 class="text-muted mb-3">Account Details</h5>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Username</label>
+                  {{ form.username }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Password</label>
+                  {{ form.password1 }}
+                  <div class="form-text">
+                    <p class="small mb-1"><strong>Must contain:</strong></p>
+                    <ul class="small">
+                      <li>At least 8 characters</li>
+                      <li>At least 1 alphabetic letter</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Confirm Password</label>
+                  {{ form.password2 }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-person-plus"></i> Register
+              </button>
+              <p class="text-center mt-3">
+                Already have an account? 
+                <a href="{% url 'login' %}">Login here!</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
