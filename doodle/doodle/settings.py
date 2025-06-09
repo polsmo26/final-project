@@ -148,23 +148,31 @@ AUTH_USER_MODEL = 'accounts.User'
 
 
 # In your config.py or at the top of your app.py
+# At the top
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  # Load environment variables from .env file
+load_dotenv()
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL
-        'NAME': os.getenv('DB_NAME', 'taskmanager'),  # Database name
-        'USER': os.getenv('DB_USER', 'postgres'),     # PostgreSQL username
-        'PASSWORD': os.getenv('DB_PASSWORD', 'password'),     # PostgreSQL password
-        'HOST': os.getenv('DB_HOST', 'localhost'),    # Leave as localhost for dev
-        'PORT': os.getenv('DB_PORT', '5432'),         # Default PostgreSQL port
-    }
-}
-
-# Add this for Railway deployment
+# Database configuration (for Railway)
 if os.getenv('DATABASE_URL'):
     import dj_database_url
-    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': os.getenv('DB_PORT'),
+        }
+    }
+
+# Static files (for Whitenoise)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
