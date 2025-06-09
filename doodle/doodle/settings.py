@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+# from dotenv import load_dotenv
+# load_dotenv()
 from pathlib import Path
 import os
 
@@ -77,12 +78,14 @@ WSGI_APPLICATION = 'doodle.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+
+# DATABASES = {
+#     # 'default': dj_database_url.config(default=os.environ.get("https://aaytzrwzeoqasmiqpxra.supabase.co"))
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
@@ -142,3 +145,26 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+
+# In your config.py or at the top of your app.py
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL
+        'NAME': os.getenv('DB_NAME', 'taskmanager'),  # Database name
+        'USER': os.getenv('DB_USER', 'postgres'),     # PostgreSQL username
+        'PASSWORD': os.getenv('DB_PASSWORD', 'password'),     # PostgreSQL password
+        'HOST': os.getenv('DB_HOST', 'localhost'),    # Leave as localhost for dev
+        'PORT': os.getenv('DB_PORT', '5432'),         # Default PostgreSQL port
+    }
+}
+
+# Add this for Railway deployment
+if os.getenv('DATABASE_URL'):
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
