@@ -1,11 +1,12 @@
 {% load static %}
 <header id="header" class="header d-flex align-items-center light-background sticky-top" style="background-color: white;">
   <div class="container-fluid position-relative d-flex align-items-center justify-content-between">
+  {% comment %} <div class="position-relative d-flex align-items-center justify-content-between"> {% endcomment %}
 
     <!-- Logo aligned to the left -->
     <div class="d-flex align-items-center me-auto">
       <a href="{% url 'home' %}" class="d-flex align-items-center">
-        <img src="https://i.postimg.cc/1zwrt7wZ/IMG-6164-removebg-preview.png" alt="Doodle Logo" class="logo-img" style="width: 100px; height: auto;">
+        <img src="https://i.postimg.cc/1zwrt7wZ/IMG-6164-removebg-preview.png" alt="Doodle Logo" class="logo-img" style="width: 100px; height: auto; max-width: 100px;">
       </a>
     </div>
 
@@ -18,7 +19,8 @@
           <li><a href="{% url 'dashboard' %}" class="{% if 'dashboard' in request.path %}active{% endif %}">Dashboard</a></li>
           <li><a href="{% url 'tasks:task_list' %}" class="{% if request.path == '/tasks/' or request.path == '/tasks' %}active{% endif %}">Tasks</a></li>
           <li><a href="{% url 'tasks:task_calendar' %}" class="{% if 'task_calendar' in request.path %}active{% endif %}">Task Calendar</a></li>
-          <li><a href="{% url 'logout' %}">Logout</a></li>
+          <li><a href="{% url 'logout' %}" onclick="return confirm('Are you sure you want to log out?')">Logout</a></li>
+          {% comment %} <li><a href="{% url 'logout_confirm' %}">Logout</a></li> {% endcomment %}
         {% else %}
           <li><a href="{% url 'login' %}" class="{% if 'login' in request.path %}active{% endif %}">Login</a></li>
           <li><a href="{% url 'register' %}" class="{% if 'register' in request.path %}active{% endif %}">Register</a></li>

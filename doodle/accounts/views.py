@@ -60,6 +60,12 @@ def logout_view(request):
     messages.info(request, "You have been logged out.")
     return redirect('home')
 
+# def logout_confirm(request):
+#     if request.method == 'POST':
+#         logout(request)
+#         return redirect('home')
+#     return render(request, 'logout_confirm.html')
+
 @login_required
 def dashboard(request):
     try:
