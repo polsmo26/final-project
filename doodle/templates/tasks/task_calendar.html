@@ -2,6 +2,27 @@
 {% load extras %}
 {% block content %}
 <div class="container mt-4">
+    {% if no_due_dates %}
+        <!-- No Due Dates Message -->
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="bi bi-calendar-x" style="font-size: 4rem; color: #6c757d;"></i>
+            </div>
+            <h3 class="text-muted mb-3">No Due Dates Yet</h3>
+            <p class="text-muted mb-4">
+                You don't have any tasks with due dates. Once you add due dates to your tasks, 
+                they'll appear here on the calendar.
+            </p>
+            <div>
+                <a href="{% url 'tasks:task_list' %}" class="btn btn-primary me-2">
+                    <i class="bi bi-list-task"></i> View All Tasks
+                </a>
+                <a href="{% url 'tasks:task_create' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-plus-circle"></i> Create New Task
+                </a>
+            </div>
+        </div>
+    {% else %}
     <h2 class="mb-4">📅 Task Calendar - {{ month_name }} {{ year }}</h2>
     
     <!-- Month Navigation -->
@@ -59,6 +80,7 @@
             </tbody>
         </table>
     </div>
+{% endif %}
 </div>
 
 <style>
@@ -80,7 +102,7 @@
         overflow-y: auto;
     }
     .task-item {
-        background-color: #e9f7fe;
+        background-color:rgb(178, 210, 227);
         border-left: 3px solid #17a2b8;
         padding: 3px;
         margin-bottom: 3px;

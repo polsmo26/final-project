@@ -9,6 +9,20 @@ import calendar
 from django.utils.safestring import mark_safe
 
 def task_calendar(request):
+    # First, check if user has ANY tasks with due dates
+    user_has_due_dates = Task.objects.filter(
+        user=request.user,
+        due_date__isnull=False
+    ).exists()
+    
+    # If no tasks have due dates, show message instead of calendar
+    if not user_has_due_dates:
+        context = {
+            'no_due_dates': True,
+        }
+        return render(request, 'tasks/task_calendar.html', context)
+    
+    
     # Get year/month from URL (default: current month)
     year = int(request.GET.get('year', datetime.now().year))
     month = int(request.GET.get('month', datetime.now().month))
